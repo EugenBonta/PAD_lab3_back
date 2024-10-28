@@ -18,13 +18,13 @@ public class ActivityController {
         this.activityService = activityService;
     }
 
-    @GetMapping("getActivityByEmployeeID/{id}")
+    @GetMapping("api/activity/{id}")
     public List<Activity> getActivityByEmployeeID(@PathVariable String id) {
         return activityService.getActivitiesByEmployeeId(id);
     }
 
-    @PostMapping("addActivityToEmployee/{id}")
-    public Activity addActivityToEmployee(@PathVariable String id, @RequestBody Activity activity) {
-        return activityService.addActivityToEmployee(id, activity);
+    @PostMapping("api/activity")
+    public Activity addActivityToEmployee(@RequestBody Activity activity) {
+        return activityService.addActivityToEmployee(activity);
     }
 }

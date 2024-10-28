@@ -6,16 +6,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Activity {
-    private String id;
-    private String employee;
+    private Integer id;
+    private Integer employeeId;
     private String entry;
     private String exit;
 
     public Activity() {}
 
-    public Activity(String id, String employee, String entry, String exit) {
+    public Activity(Integer id, Integer employeeId, String entry, String exit) {
         this.id = id;
-        this.employee = employee;
+        this.employeeId = employeeId;
         this.entry = entry;
         this.exit = exit;
     }

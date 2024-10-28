@@ -19,27 +19,27 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("getAll")
+    @GetMapping("api/employee/all")
     public List<Employee> getAll() {
         return employeeService.getAllEmployees();
     }
 
-    @GetMapping(value = "getByID/{id}")
+    @GetMapping(value = "api/employee/{id}")
     public Employee getByID(@PathVariable String id){
         return employeeService.getEmployeeById(id);
     }
 
-    @PostMapping("create")
+    @PostMapping("api/employee")
     public Employee create(@RequestBody Employee employee){
         return employeeService.addEmployee(employee);
     }
 
-    @PatchMapping("update/{id}")
-    public Employee update(@PathVariable String id, @RequestBody Employee employee){
-        return employeeService.updateEmployee(id, employee);
+    @PutMapping("api/employee")
+    public Employee update(@RequestBody Employee employee){
+        return employeeService.updateEmployee(employee);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("api/employee/{id}")
     public void delete(@PathVariable String id) {
         employeeService.deleteEmployee(id);
     }

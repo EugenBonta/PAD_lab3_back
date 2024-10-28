@@ -14,7 +14,7 @@ public class ActivityService implements ActivityServiceInterface {
     }
 
     @Override
-    public Activity addActivityToEmployee(String employeeId, Activity activity) {
+    public Activity addActivityToEmployee(Activity activity) {
         return null;
     }
 }
