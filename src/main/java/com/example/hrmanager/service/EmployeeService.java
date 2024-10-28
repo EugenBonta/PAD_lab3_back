@@ -1,6 +1,8 @@
 package com.example.hrmanager.service;
 
 import com.example.hrmanager.classes.Employee;
+import com.example.hrmanager.dao.EmployeeDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,9 +10,12 @@ import java.util.List;
 @Service
 public class EmployeeService implements EmployeeServiceInterface {
 
+    @Autowired
+    private EmployeeDao employeeDao;
+
     @Override
     public List<Employee> getAllEmployees() {
-        return null;
+        return employeeDao.findAll();
     }
 
     @Override
