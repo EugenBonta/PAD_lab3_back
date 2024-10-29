@@ -2,10 +2,13 @@ package com.example.hrmanager.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
 public class Activity {
+    @Id
     private Integer id;
     private Integer employeeId;
     private String entry;

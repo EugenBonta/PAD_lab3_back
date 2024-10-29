@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Employee {
 
     @Id
-    private ObjectId id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private String employmentDate;
@@ -23,7 +23,7 @@ public class Employee {
 
     public Employee() {}
 
-    public Employee(ObjectId  id, String firstName, String lastName,
+    public Employee(Integer  id, String firstName, String lastName,
                     String employmentDate, Integer departmentId, Integer salary) {
         this.id = id;
         this.firstName = firstName;

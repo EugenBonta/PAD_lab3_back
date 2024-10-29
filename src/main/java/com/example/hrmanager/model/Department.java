@@ -3,6 +3,8 @@ package com.example.hrmanager.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -11,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Departments")
 
 public class Department {
+    @Id
     private Integer id;
     private String name;
 
