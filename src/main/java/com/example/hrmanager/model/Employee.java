@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Getter
 @Setter
 @Document(collection = "Employees")
-
 public class Employee {
 
     @Id
@@ -33,4 +32,7 @@ public class Employee {
         this.salary = salary;
     }
 
+    public Integer getDepartmentId(){
+        return departmentId;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.hrmanager.controller;
 
 
+import com.example.hrmanager.dto.GetEmployeeDto;
 import com.example.hrmanager.model.Employee;
 import com.example.hrmanager.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class EmployeeController {
     }
 
     @GetMapping("api/employee/all")
-    public List<Employee> getAll() {
-        return employeeService.getAllEmployees();
+    public List<GetEmployeeDto> getAll() {
+        return employeeService.getEmployeesWithDepartments();
     }
 
     @GetMapping(value = "api/employee/{id}")
