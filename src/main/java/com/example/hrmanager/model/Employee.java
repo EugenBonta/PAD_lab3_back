@@ -1,4 +1,4 @@
-package com.example.hrmanager.classes;
+package com.example.hrmanager.model;
 
 import lombok.Getter;
 import lombok.Setter;

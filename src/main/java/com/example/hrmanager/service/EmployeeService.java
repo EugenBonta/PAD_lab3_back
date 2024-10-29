@@ -1,6 +1,6 @@
 package com.example.hrmanager.service;
 
-import com.example.hrmanager.classes.Employee;
+import com.example.hrmanager.model.Employee;
 import com.example.hrmanager.dao.EmployeeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.example.hrmanager.dao;
 
-import com.example.hrmanager.classes.Employee;
+import com.example.hrmanager.model.Employee;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

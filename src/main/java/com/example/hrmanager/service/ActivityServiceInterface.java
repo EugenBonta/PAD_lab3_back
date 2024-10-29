@@ -1,6 +1,6 @@
 package com.example.hrmanager.service;
 
-import com.example.hrmanager.classes.Activity;
+import com.example.hrmanager.model.Activity;
 
 import java.util.List;
 
