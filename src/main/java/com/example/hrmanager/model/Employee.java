@@ -2,11 +2,19 @@ package com.example.hrmanager.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @Setter
+@Document(collection = "Employees")
+
 public class Employee {
-    private Integer id;
+
+    @Id
+    private ObjectId id;
     private String firstName;
     private String lastName;
     private String employmentDate;
@@ -15,7 +23,7 @@ public class Employee {
 
     public Employee() {}
 
-    public Employee(Integer id, String firstName, String lastName,
+    public Employee(ObjectId  id, String firstName, String lastName,
                     String employmentDate, Integer departmentId, Integer salary) {
         this.id = id;
         this.firstName = firstName;
