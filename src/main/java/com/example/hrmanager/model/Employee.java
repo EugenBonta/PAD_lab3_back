@@ -30,7 +30,4 @@ public class Employee {
         this.salary = salary;
     }
 
-    public Integer getDepartmentId(){
-        return departmentId;
-    }
 }

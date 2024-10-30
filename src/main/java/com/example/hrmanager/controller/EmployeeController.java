@@ -1,6 +1,7 @@
 package com.example.hrmanager.controller;
 
 
+import com.example.hrmanager.dto.CreateEmployeeDto;
 import com.example.hrmanager.dto.GetEmployeeDto;
 import com.example.hrmanager.model.Employee;
 import com.example.hrmanager.service.EmployeeService;
@@ -26,12 +27,12 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "api/employee/{id}")
-    public Employee getByID(@PathVariable String id){
+    public GetEmployeeDto getByID(@PathVariable Integer id){
         return employeeService.getEmployeeById(id);
     }
 
     @PostMapping("api/employee")
-    public Employee create(@RequestBody Employee employee){
+    public Employee create(@RequestBody CreateEmployeeDto employee){
         return employeeService.addEmployee(employee);
     }
 
@@ -41,7 +42,8 @@ public class EmployeeController {
     }
 
     @DeleteMapping("api/employee/{id}")
-    public void delete(@PathVariable String id) {
+    public boolean delete(@PathVariable Integer id) {
         employeeService.deleteEmployee(id);
+        return true;
     }
 }

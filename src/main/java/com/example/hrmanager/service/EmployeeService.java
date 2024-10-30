@@ -1,6 +1,7 @@
 package com.example.hrmanager.service;
 
 import com.example.hrmanager.dao.DepartmentDao;
+import com.example.hrmanager.dto.CreateEmployeeDto;
 import com.example.hrmanager.dto.GetEmployeeDto;
 import com.example.hrmanager.model.Department;
 import com.example.hrmanager.model.Employee;
@@ -18,7 +19,7 @@ public class EmployeeService implements EmployeeServiceInterface {
     private EmployeeDao employeeDao;
 
     @Autowired
-    private DepartmentDao departmentDao; // You need to create this DAO
+    private DepartmentDao departmentDao;
 
 
     @Override
@@ -27,23 +28,47 @@ public class EmployeeService implements EmployeeServiceInterface {
     }
 
     @Override
-    public Employee getEmployeeById(String id) {
-        return null;
+    public GetEmployeeDto getEmployeeById(Integer id) {
+        Employee employee = employeeDao.findById(id).orElse(null);
+        Department department = departmentDao.findById(employee.getDepartmentId() ).orElse(null);
+        return new GetEmployeeDto(
+                employee.getId(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getEmploymentDate(),
+                employee.getSalary(),
+                department
+        );
     }
 
     @Override
-    public Employee addEmployee(Employee employee) {
-        return employee;
+    public Employee addEmployee(CreateEmployeeDto employee) {
+        Integer maxId = employeeDao.findTopByOrderByIdDesc()
+                .map(Employee::getId)
+                .orElse(0);
+        Employee emp = new Employee(
+                maxId + 1,
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getEmploymentDate(),
+                employee.getDepartmentId(),
+                employee.getSalary()
+        );
+        return employeeDao.save(emp);
     }
+
 
     @Override
     public Employee updateEmployee(Employee employee) {
-        return employee;
+        Employee result = employeeDao.findById(employee.getId()).orElse(null);
+        assert result != null;
+        return employeeDao.save(result);
     }
 
     @Override
-    public void deleteEmployee(String id) {
-
+    public boolean deleteEmployee(Integer id) {
+        employeeDao.deleteById(id);
+        return true;
     }
 
     public List<GetEmployeeDto> getEmployeesWithDepartments() {
@@ -62,4 +87,6 @@ public class EmployeeService implements EmployeeServiceInterface {
                 })
                 .collect(Collectors.toList());
     }
+
+
 }
