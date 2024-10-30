@@ -1,6 +1,5 @@
 package com.example.hrmanager.dto;
 
-import com.example.hrmanager.model.Department;
 import lombok.Getter;
 import lombok.Setter;
 

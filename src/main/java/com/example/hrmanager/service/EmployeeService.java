@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +31,7 @@ public class EmployeeService implements EmployeeServiceInterface {
     @Override
     public GetEmployeeDto getEmployeeById(Integer id) {
         Employee employee = employeeDao.findById(id).orElse(null);
-        Department department = departmentDao.findById(employee.getDepartmentId() ).orElse(null);
+        Department department = departmentDao.findById(employee.getDepartmentId()).orElse(null);
         return new GetEmployeeDto(
                 employee.getId(),
                 employee.getFirstName(),
@@ -60,9 +61,19 @@ public class EmployeeService implements EmployeeServiceInterface {
 
     @Override
     public Employee updateEmployee(Employee employee) {
-        Employee result = employeeDao.findById(employee.getId()).orElse(null);
-        assert result != null;
-        return employeeDao.save(result);
+        Optional<Employee> existingEmployee = employeeDao.findById(employee.getId());
+
+        if (existingEmployee.isPresent()) {
+            Employee emp = existingEmployee.get();
+            emp.setFirstName(employee.getFirstName());
+            emp.setLastName(employee.getLastName());
+            emp.setEmploymentDate(employee.getEmploymentDate());
+            emp.setDepartmentId(employee.getDepartmentId());
+            emp.setSalary(employee.getSalary());
+            return employeeDao.save(emp);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -75,7 +86,7 @@ public class EmployeeService implements EmployeeServiceInterface {
         List<Employee> employees = employeeDao.findAll();
         return employees.stream()
                 .map(employee -> {
-                    Department department = departmentDao.findById(employee.getDepartmentId() ).orElse(null);
+                    Department department = departmentDao.findById(employee.getDepartmentId()).orElse(null);
                     return new GetEmployeeDto(
                             employee.getId(),
                             employee.getFirstName(),

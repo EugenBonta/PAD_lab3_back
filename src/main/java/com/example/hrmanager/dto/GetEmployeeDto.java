@@ -14,11 +14,10 @@ public class GetEmployeeDto {
     private Integer salary;
     private Department department;
 
-    // Constructor, Getters, and Setters
 
     public GetEmployeeDto(Integer id, String firstName, String lastName,
-                                     String employmentDate, Integer salary,
-                                     Department department) {
+                          String employmentDate, Integer salary,
+                          Department department) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -27,5 +26,4 @@ public class GetEmployeeDto {
         this.department = department;
     }
 
-    // Getters and Setters
 }
