@@ -15,14 +15,18 @@ public class ActivityService implements ActivityServiceInterface {
 
     @Override
     public List<Activity> getActivitiesByEmployeeId(String employeeId) {
-        // Convert employeeId to Integer
         Integer empId = Integer.valueOf(employeeId);
         return activityDao.findByEmployeeId(empId);
     }
 
     @Override
     public Activity addActivityToEmployee(Activity activity) {
-        // Save the activity and return it
+        Integer maxId = activityDao.findTopByOrderByIdDesc()
+                .map(Activity::getId)
+                .orElse(0);
+        activity.setId(maxId + 1);
+
         return activityDao.save(activity);
     }
+
 }

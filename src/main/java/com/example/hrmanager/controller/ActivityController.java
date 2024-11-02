@@ -14,10 +14,6 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
-    public ActivityController (ActivityService activityService) {
-        this.activityService = activityService;
-    }
-
     @GetMapping("api/activity/{id}")
     public List<Activity> getActivityByEmployeeID(@PathVariable String id) {
         return activityService.getActivitiesByEmployeeId(id);

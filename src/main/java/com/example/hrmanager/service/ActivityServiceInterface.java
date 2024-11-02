@@ -7,6 +7,6 @@ import java.util.List;
 public interface ActivityServiceInterface {
 
     List<Activity> getActivitiesByEmployeeId(String employeeId);
-    Activity addActivityToEmployee(Activity activity);
 
+    Activity addActivityToEmployee(Activity activity);
 }

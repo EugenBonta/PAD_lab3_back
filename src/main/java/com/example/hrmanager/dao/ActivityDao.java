@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ActivityDao extends MongoRepository<Activity, Integer> {
     List<Activity> findByEmployeeId(Integer employeeId);
+    Optional<Activity> findTopByOrderByIdDesc();
 
 }

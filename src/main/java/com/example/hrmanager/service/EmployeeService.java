@@ -31,6 +31,7 @@ public class EmployeeService implements EmployeeServiceInterface {
     @Override
     public GetEmployeeDto getEmployeeById(Integer id) {
         Employee employee = employeeDao.findById(id).orElse(null);
+        assert employee != null;
         Department department = departmentDao.findById(employee.getDepartmentId()).orElse(null);
         return new GetEmployeeDto(
                 employee.getId(),
