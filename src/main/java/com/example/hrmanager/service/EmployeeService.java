@@ -7,6 +7,11 @@ import com.example.hrmanager.model.Department;
 import com.example.hrmanager.model.Employee;
 import com.example.hrmanager.dao.EmployeeDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RedisHash
 public class EmployeeService implements EmployeeServiceInterface {
 
     @Autowired
@@ -22,13 +28,14 @@ public class EmployeeService implements EmployeeServiceInterface {
     @Autowired
     private DepartmentDao departmentDao;
 
-
     @Override
+    @Cacheable(value = "employees")
     public List<Employee> getAllEmployees() {
         return employeeDao.findAll();
     }
 
     @Override
+    @Cacheable(value = "employee", key = "#id")
     public GetEmployeeDto getEmployeeById(Integer id) {
         Employee employee = employeeDao.findById(id).orElse(null);
         assert employee != null;
@@ -44,6 +51,7 @@ public class EmployeeService implements EmployeeServiceInterface {
     }
 
     @Override
+    @CacheEvict(value = "employees", allEntries = true)
     public Employee addEmployee(CreateEmployeeDto employee) {
         Integer maxId = employeeDao.findTopByOrderByIdDesc()
                 .map(Employee::getId)
@@ -59,8 +67,9 @@ public class EmployeeService implements EmployeeServiceInterface {
         return employeeDao.save(emp);
     }
 
-
     @Override
+    @CachePut(value = "employee", key = "#employee.id")
+    @CacheEvict(value = "employees", allEntries = true)
     public Employee updateEmployee(Employee employee) {
         Optional<Employee> existingEmployee = employeeDao.findById(employee.getId());
 
@@ -78,11 +87,16 @@ public class EmployeeService implements EmployeeServiceInterface {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "employee", key = "#id"),
+            @CacheEvict(value = "employees", allEntries = true)
+    })
     public boolean deleteEmployee(Integer id) {
         employeeDao.deleteById(id);
         return true;
     }
 
+    @Cacheable(value = "employeesWithDepartments")
     public List<GetEmployeeDto> getEmployeesWithDepartments() {
         List<Employee> employees = employeeDao.findAll();
         return employees.stream()
@@ -99,6 +113,4 @@ public class EmployeeService implements EmployeeServiceInterface {
                 })
                 .collect(Collectors.toList());
     }
-
-
 }

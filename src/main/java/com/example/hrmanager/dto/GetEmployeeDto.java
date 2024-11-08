@@ -15,6 +15,8 @@ public class GetEmployeeDto {
     private Department department;
 
 
+    public GetEmployeeDto() {}
+
     public GetEmployeeDto(Integer id, String firstName, String lastName,
                           String employmentDate, Integer salary,
                           Department department) {

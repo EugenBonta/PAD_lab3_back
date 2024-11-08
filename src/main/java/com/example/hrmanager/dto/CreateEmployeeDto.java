@@ -13,6 +13,8 @@ public class CreateEmployeeDto {
     private Integer departmentId;
 
 
+    public CreateEmployeeDto() {}
+
     public CreateEmployeeDto(String firstName, String lastName,
                              String employmentDate, Integer salary,
                              Integer departmentId) {
