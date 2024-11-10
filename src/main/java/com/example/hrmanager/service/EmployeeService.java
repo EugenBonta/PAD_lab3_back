@@ -11,7 +11,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.data.redis.core.RedisHash;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RedisHash
 public class EmployeeService implements EmployeeServiceInterface {
 
     @Autowired
@@ -38,7 +36,9 @@ public class EmployeeService implements EmployeeServiceInterface {
     @Cacheable(value = "employee", key = "#id")
     public GetEmployeeDto getEmployeeById(Integer id) {
         Employee employee = employeeDao.findById(id).orElse(null);
-        assert employee != null;
+        if (employee == null) {
+            return null; // or throw a custom EmployeeNotFoundException
+        }
         Department department = departmentDao.findById(employee.getDepartmentId()).orElse(null);
         return new GetEmployeeDto(
                 employee.getId(),
@@ -68,8 +68,12 @@ public class EmployeeService implements EmployeeServiceInterface {
     }
 
     @Override
-    @CachePut(value = "employee", key = "#employee.id")
-    @CacheEvict(value = "employees", allEntries = true)
+    @Caching(evict = {
+        @CacheEvict(value = "employeesWithDepartments", allEntries = true), // Clears cached list of employees with departments
+        @CacheEvict(value = "employees", allEntries = true), // Clears cached list of all employees
+            @CacheEvict(value = "employee", key = "#employee.id") // Clears cached list of all employees
+
+    })
     public Employee updateEmployee(Employee employee) {
         Optional<Employee> existingEmployee = employeeDao.findById(employee.getId());
 
@@ -80,7 +84,7 @@ public class EmployeeService implements EmployeeServiceInterface {
             emp.setEmploymentDate(employee.getEmploymentDate());
             emp.setDepartmentId(employee.getDepartmentId());
             emp.setSalary(employee.getSalary());
-            return employeeDao.save(emp);
+            return employeeDao.save(emp); // Cache will store updated employee here
         } else {
             return null;
         }
@@ -88,12 +92,16 @@ public class EmployeeService implements EmployeeServiceInterface {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "employee", key = "#id"),
-            @CacheEvict(value = "employees", allEntries = true)
+            @CacheEvict(value = "employee", key = "#id"), // Removes individual employee cache
+            @CacheEvict(value = "employeesWithDepartments", allEntries = true), // Clears cached list of employees with departments
+            @CacheEvict(value = "employees", allEntries = true) // Clears cached list of all employees
     })
     public boolean deleteEmployee(Integer id) {
-        employeeDao.deleteById(id);
-        return true;
+        if (employeeDao.existsById(id)) {
+            employeeDao.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     @Cacheable(value = "employeesWithDepartments")
