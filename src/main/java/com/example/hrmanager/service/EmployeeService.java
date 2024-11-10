@@ -3,6 +3,7 @@ package com.example.hrmanager.service;
 import com.example.hrmanager.dao.DepartmentDao;
 import com.example.hrmanager.dto.CreateEmployeeDto;
 import com.example.hrmanager.dto.GetEmployeeDto;
+import com.example.hrmanager.exceptions.NotFoundException;
 import com.example.hrmanager.model.Department;
 import com.example.hrmanager.model.Employee;
 import com.example.hrmanager.dao.EmployeeDao;
@@ -35,10 +36,8 @@ public class EmployeeService implements EmployeeServiceInterface {
     @Override
     @Cacheable(value = "employee", key = "#id")
     public GetEmployeeDto getEmployeeById(Integer id) {
-        Employee employee = employeeDao.findById(id).orElse(null);
-        if (employee == null) {
-            return null; // or throw a custom EmployeeNotFoundException
-        }
+        Employee employee = employeeDao.findById(id).orElseThrow(() -> new NotFoundException("Employee with id " + id + " not found"));
+
         Department department = departmentDao.findById(employee.getDepartmentId()).orElse(null);
         return new GetEmployeeDto(
                 employee.getId(),
@@ -51,7 +50,10 @@ public class EmployeeService implements EmployeeServiceInterface {
     }
 
     @Override
-    @CacheEvict(value = "employees", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "employeesWithDepartments", allEntries = true),
+            @CacheEvict(value = "employees", allEntries = true),
+    })
     public Employee addEmployee(CreateEmployeeDto employee) {
         Integer maxId = employeeDao.findTopByOrderByIdDesc()
                 .map(Employee::getId)
@@ -69,10 +71,9 @@ public class EmployeeService implements EmployeeServiceInterface {
 
     @Override
     @Caching(evict = {
-        @CacheEvict(value = "employeesWithDepartments", allEntries = true), // Clears cached list of employees with departments
-        @CacheEvict(value = "employees", allEntries = true), // Clears cached list of all employees
-            @CacheEvict(value = "employee", key = "#employee.id") // Clears cached list of all employees
-
+        @CacheEvict(value = "employeesWithDepartments", allEntries = true),
+        @CacheEvict(value = "employees", allEntries = true),
+        @CacheEvict(value = "employee", key = "#employee.id")
     })
     public Employee updateEmployee(Employee employee) {
         Optional<Employee> existingEmployee = employeeDao.findById(employee.getId());
@@ -92,9 +93,9 @@ public class EmployeeService implements EmployeeServiceInterface {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "employee", key = "#id"), // Removes individual employee cache
             @CacheEvict(value = "employeesWithDepartments", allEntries = true), // Clears cached list of employees with departments
-            @CacheEvict(value = "employees", allEntries = true) // Clears cached list of all employees
+            @CacheEvict(value = "employees", allEntries = true), // Clears cached list of all employees
+            @CacheEvict(value = "employee", key = "#id") // Removes individual employee cache
     })
     public boolean deleteEmployee(Integer id) {
         if (employeeDao.existsById(id)) {

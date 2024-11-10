@@ -3,15 +3,14 @@ package com.example.hrmanager.service;
 import com.example.hrmanager.dao.ActivityDao;
 import com.example.hrmanager.model.Activity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisHash;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RedisHash
 public class ActivityService implements ActivityServiceInterface {
 
     @Autowired
@@ -25,7 +24,7 @@ public class ActivityService implements ActivityServiceInterface {
     }
 
     @Override
-    @CachePut(value = "activities", key = "#activity.employeeId")
+    @CacheEvict(value = "activities", key = "#activity.employeeId", beforeInvocation = true)
     public Activity addActivityToEmployee(Activity activity) {
         Integer maxId = activityDao.findTopByOrderByIdDesc()
                 .map(Activity::getId)
