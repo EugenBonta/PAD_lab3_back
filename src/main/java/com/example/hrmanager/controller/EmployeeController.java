@@ -23,6 +23,7 @@ public class EmployeeController {
 
     @GetMapping("api/employee/all")
     public List<GetEmployeeDto> getAll() {
+        System.out.println("endpoint api/employee/all");
         return employeeService.getEmployeesWithDepartments();
     }
 
