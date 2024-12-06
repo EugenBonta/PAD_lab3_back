@@ -16,8 +16,6 @@ jobs:
         run: docker build . -t registry.digitalocean.com/bontaregistry/hr:latest
       - name: push image to docker hub
         run: docker push registry.digitalocean.com/bontaregistry/hr:latest
-      - name: Update Kubernetes deployment
-        run: kubectl rollout restart deployment/hr-deployment
         
   deploy:
     needs: publish_images
