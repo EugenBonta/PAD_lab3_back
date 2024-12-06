@@ -36,7 +36,4 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save k8s-1-31-1-do-4-fra1-1733171134531
         
       - name: Deploy to Kubernetes
-        run: |
-          kubectl set image deployment/hr-deployment \
-            app=registry.digitalocean.com/bontaregistry/hr:latest
-          kubectl rollout status deployment/hr-deployment
+        run: kubectl rollout restart deployment/hr-deployment
