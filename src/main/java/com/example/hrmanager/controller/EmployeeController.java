@@ -32,6 +32,11 @@ public class EmployeeController {
         return employeeService.getEmployeeById(id);
     }
 
+    @GetMapping(value = "api/test")
+    public String getTest(){
+        return "Hallo World4!!";
+    }
+
     @PostMapping("api/employee")
     public Employee create(@RequestBody CreateEmployeeDto employee){
         return employeeService.addEmployee(employee);
