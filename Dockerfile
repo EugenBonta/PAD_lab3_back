@@ -1,5 +1,5 @@
 # Build stage
-FROM maven:3.8.7-openjdk-17 AS build  # Updated to a valid Maven version
+FROM maven:3.8.7-openjdk-17 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
