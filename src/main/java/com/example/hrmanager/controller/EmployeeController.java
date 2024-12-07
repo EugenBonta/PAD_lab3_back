@@ -50,6 +50,6 @@ public class EmployeeController {
 
     @GetMapping(value = "api/test")
     public String getTest(){
-        return "Hallo World";
+        return "Hallo World!";
     }
 }

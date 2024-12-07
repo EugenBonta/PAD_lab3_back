@@ -127,6 +127,6 @@ class EmployeeControllerTest {
     void getTest() throws Exception {
         mockMvc.perform(get("/api/test"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Hallo World"));
+                .andExpect(content().string("Hallo World!"));
     }
 }
