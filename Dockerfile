@@ -1,12 +1,32 @@
-# Use an OpenJDK base image
+# Build stage
+FROM maven:3.8.8-eclipse-temurin-17 AS build
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the pom.xml and download dependencies
+COPY pom.xml .
+
+# Download dependencies to improve caching
+RUN mvn dependency:go-offline
+
+# Copy the application source code
+COPY src ./src
+
+# Build the application using Maven
+RUN mvn clean install -DskipTests
+
+# Runtime stage
 FROM openjdk:17-jdk-slim
 
-ARG JAR_FILE=target/*.jar
+# Set the working directory inside the runtime container
+WORKDIR /app
 
-# Copy the JAR file into the Docker container
-COPY ./target/hrmanager-0.0.1-SNAPSHOT.jar app.jar
+# Copy the JAR file from the build stage
+COPY --from=build /app/target/*.jar app.jar
 
+# Expose the application port (default Spring Boot port is 8080)
 EXPOSE 8080
 
-# Run the JAR file
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
