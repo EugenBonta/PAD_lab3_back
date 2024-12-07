@@ -47,4 +47,9 @@ public class EmployeeController {
         employeeService.deleteEmployee(id);
         return true;
     }
+
+    @GetMapping(value = "api/test")
+    public String getTest(){
+        return "Hallo World";
+    }
 }
